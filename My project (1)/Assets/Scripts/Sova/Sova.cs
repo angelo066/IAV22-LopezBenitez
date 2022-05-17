@@ -27,7 +27,11 @@ public class Sova : MonoBehaviour
     int[] anglesCleared;
 
     //Booleano para saber si tengo que lanzar flecha a hooka
-    bool clearingHooka = true;
+    bool clearingHooka = false;
+    //Booleano para saber si tengo que lanzar flecha a hooka
+    bool clearingLong = false;
+    //Booleano para saber si tengo que lanzar flecha a hooka
+    bool clearingSite = false;
 
     //El lugar al que está mirando el personaje en este momento
     Transform lookingAt;
@@ -41,37 +45,103 @@ public class Sova : MonoBehaviour
     }
 
     // Update is called once per frame
+    //Guardarme los spots importantes de Sova en el Start
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            clearingHooka = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.F2))
+        {
+            clearingLong = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.F3))
+        {
+            clearingSite = true;
+        }
+
         if (clearingHooka)
         {
 
             Vector3 hookaEntrance = importantSpots[13].transform.position;
+            Vector3 hookaArrowSpot = arrowSpots[0].transform.position;
 
             agent.SetDestination(hookaEntrance);
 
             Vector3 dist = transform.position - hookaEntrance;
-            if (dist.magnitude < offsetToPoints) ArrowToHooka();
+            if (dist.magnitude < offsetToPoints) shootArrow(hookaArrowSpot,ref clearingHooka, true);
 
 
             if(dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[0].transform;
 
         }
+        else if (clearingLong)
+        {
+            Vector3 longClose = importantSpots[1].transform.position;
+            Vector3 longArrowSpot = arrowSpots[1].transform.position;
 
+            agent.SetDestination(longClose);
+
+            Vector3 dist = transform.position - longClose;
+            if (dist.magnitude < offsetToPoints) shootArrow(longArrowSpot, ref clearingLong, false);
+
+
+            if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[1].transform;
+
+        }
+        else if (clearingSite)
+        {
+            //Decidimos desde donde lanzar la flecha
+            Vector3 distToLong = transform.position - importantSpots[1].transform.position;
+            Vector3 distToHooka = transform.position - importantSpots[13].transform.position;
+
+            //La lanzamos desde larga
+            if (distToLong.magnitude < distToHooka.magnitude)
+            {
+                Vector3 longGarden = importantSpots[16].transform.position;
+                Vector3 siteArrowSpot = arrowSpots[2].transform.position;
+
+                agent.SetDestination(longGarden);
+
+                Vector3 dist = transform.position - longGarden;
+                if (dist.magnitude < offsetToPoints) shootArrow(siteArrowSpot, ref clearingSite, false);
+
+
+                if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[2].transform;
+            }//La lanzamos desde hooka
+            else
+            {
+                Vector3 inHooka = importantSpots[15].transform.position;
+                Vector3 siteArrowSpot = arrowSpots[2].transform.position;
+
+                agent.SetDestination(inHooka);
+
+                Vector3 dist = transform.position - inHooka;
+                if (dist.magnitude < offsetToPoints) shootArrow(siteArrowSpot, ref clearingSite, false);
+
+
+                if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[2].transform;
+            }
+        }
+
+        Debug.Log(lookingAt);
         transform.LookAt(lookingAt);
     }
 
 
-    void ArrowToHooka()
+    void shootArrow(Vector3 target, ref bool zone, bool wallOrientation)
     {
 
+        GameObject arr = Instantiate(arrow,target, Quaternion.identity);
 
-        GameObject arr = Instantiate(arrow,arrowSpots[0].transform.position, Quaternion.identity);
+        if(wallOrientation)arr.transform.Rotate(new Vector3(0, 0, 90));
+        else arr.transform.Rotate(new Vector3(90, 0, 0));
 
-        arr.transform.Rotate(new Vector3(0, 0, 90));
 
-        clearingHooka = false;
+        zone = false;
 
+        lookingAt = null;
         //if(/*Enemy Spotted */)
         //{
         //    enemiesFrequentPositions.Add(/*pos*/);
