@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Messages : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public enum MessageType { EnemySpotte, AngleCleared }
 
-    // Update is called once per frame
-    void Update()
+    public struct Message
     {
-        
+        MessageType type;
+
+        int spot;
+
+        Vector3 positon;
     }
 }
