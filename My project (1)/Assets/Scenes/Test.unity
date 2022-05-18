@@ -633,6 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff9f864a52f7284498239cdbb3e4d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numEnemies: 2
   importantSpots:
   - {fileID: 190615202}
   - {fileID: 1105747599}
@@ -651,6 +652,18 @@ MonoBehaviour:
   - {fileID: 755875418}
   - {fileID: 430701732}
   - {fileID: 1475555395}
+  enemySpawnSpots:
+  - {fileID: 368729067}
+  - {fileID: 322202245}
+  - {fileID: 894439019}
+  - {fileID: 777415467}
+  - {fileID: 1525752830}
+  - {fileID: 1343907060}
+  - {fileID: 2025185231}
+  - {fileID: 977963273}
+  - {fileID: 755875418}
+  - {fileID: 430701732}
+  enemy: {fileID: 5818073084189135117, guid: ac010c3d1cea197409a7d564a64f80df, type: 3}
 --- !u!4 &756172753
 Transform:
   m_ObjectHideFlags: 0
