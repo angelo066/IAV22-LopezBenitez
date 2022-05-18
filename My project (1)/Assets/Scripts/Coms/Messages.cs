@@ -6,12 +6,9 @@ public class Messages : MonoBehaviour
 {
     public enum MessageType { EnemySpotte, AngleCleared }
 
-    public struct Message
-    {
-        MessageType type;
+    public MessageType type;
 
-        int spot;
+    public int spot;
 
-        Vector3 positon;
-    }
+    public List<Vector3> positions;
 }

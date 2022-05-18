@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    int spot;
 
-    // Update is called once per frame
-    void Update()
+    public void setSpot(int s)
     {
-        
+        spot = s;
     }
 }

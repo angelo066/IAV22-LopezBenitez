@@ -39,7 +39,10 @@ public class GameManager : MonoBehaviour
         {
             int spot = Random.Range(0, enemySpawnSpots.Length);
 
-            Instantiate(enemy, enemySpawnSpots[spot].transform.position, Quaternion.identity);
+            GameObject enem = Instantiate(enemy, enemySpawnSpots[spot].transform.position, Quaternion.identity);
+
+            //Hay que convertir este spot a general
+            enem.GetComponent<Enemy>().setSpot(spot);
         }
     }
 

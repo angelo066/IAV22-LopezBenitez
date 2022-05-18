@@ -183,7 +183,7 @@ public class Sova : MonoBehaviour
 
     }
 
-    void ReceiveInfo(Messages.Message msg)
+    void ReceiveInfo(Messages msg)
     {
 
     }

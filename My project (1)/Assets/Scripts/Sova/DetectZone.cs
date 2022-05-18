@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DetectZone : MonoBehaviour
 {
+    bool enemySpotted = false;
+
+    List<Vector3> enemyPositions;
+
     private void OnTriggerEnter(Collider other)
     {
         
@@ -13,9 +17,25 @@ public class DetectZone : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(transform.position, transform.position - other.transform.position, out hit))
             {
-                Debug.Log("Detected");
+                enemySpotted = true;
 
             }
         }  
+    }
+
+    public bool spottedAnEnemy()
+    {
+        return enemySpotted;
+    }
+
+    public Messages getPositions()
+    {
+        Messages msg = new Messages();
+
+        msg.type = Messages.MessageType.EnemySpotte;
+
+        msg.positions = enemyPositions;
+
+        return msg;
     }
 }
