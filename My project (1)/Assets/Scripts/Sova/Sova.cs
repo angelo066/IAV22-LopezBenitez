@@ -5,6 +5,12 @@ using UnityEngine.AI;
 
 public class Sova : MonoBehaviour
 {
+    //Enum de los lugares a los que mirar o en los que colocarse
+    enum Spots {Market, Close_Long, Close_Fountain, Long_Pocket, Garden, Garden_Pocket, Elbow, Close_Ct, Ct, BackSite, Container_Box, Containner_Cubby,
+    Under_Window, Hooka_Entry, Back_Hooka, Hooka_Close, Long_Garden};
+
+    enum arrows { Hooka, Long, Site};
+
     //La flecha, evidentemente
     public GameObject arrow;
 
@@ -33,8 +39,8 @@ public class Sova : MonoBehaviour
     //Booleano para saber si tengo que lanzar flecha a hooka
     bool clearingSite = false;
 
-    //El lugar al que está mirando el personaje en este momento
-    Transform lookingAt;
+    //The angle that we are holding at the moment
+    Transform holding = null;
 
     private void Start()
     {
@@ -48,6 +54,7 @@ public class Sova : MonoBehaviour
     //Guardarme los spots importantes de Sova en el Start
     void Update()
     {
+        //Debugging input
         if (Input.GetKeyDown(KeyCode.F1))
         {
             clearingHooka = true;
@@ -60,73 +67,101 @@ public class Sova : MonoBehaviour
         {
             clearingSite = true;
         }
+        else if (Input.GetKeyDown(KeyCode.F4))
+        {
+            stopHolding();
+        }
+
+        //Debug.Log(lookingAt);
 
         if (clearingHooka)
         {
 
-            Vector3 hookaEntrance = importantSpots[13].transform.position;
-            Vector3 hookaArrowSpot = arrowSpots[0].transform.position;
+            Vector3 hookaEntrance = importantSpots[(int)Spots.Hooka_Entry].transform.position;
+            Vector3 hookaArrowSpot = arrowSpots[(int)arrows.Hooka].transform.position;
 
             agent.SetDestination(hookaEntrance);
 
             Vector3 dist = transform.position - hookaEntrance;
-            if (dist.magnitude < offsetToPoints) shootArrow(hookaArrowSpot,ref clearingHooka, true);
+            if (dist.magnitude < offsetToPoints)
+            {
+                shootArrow(hookaArrowSpot, ref clearingHooka, true);
 
+                //Miramos a donde pueden correr los enemigos
+                holding = importantSpots[(int)Spots.Back_Hooka].transform;
+            }
 
-            if(dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[0].transform;
+            //Preparamos la flecha antes de asomar a la esquina para no perder tiempo
+            if(dist.magnitude < offsetToPoints + lookingOffset) transform.LookAt(arrowSpots[(int)arrows.Hooka].transform);
 
         }
         else if (clearingLong)
         {
-            Vector3 longClose = importantSpots[1].transform.position;
-            Vector3 longArrowSpot = arrowSpots[1].transform.position;
+
+            Vector3 longClose = importantSpots[(int)Spots.Close_Long].transform.position;
+            Vector3 longArrowSpot = arrowSpots[(int)arrows.Long].transform.position;
 
             agent.SetDestination(longClose);
 
             Vector3 dist = transform.position - longClose;
-            if (dist.magnitude < offsetToPoints) shootArrow(longArrowSpot, ref clearingLong, false);
+            if (dist.magnitude < offsetToPoints)
+            {
+                shootArrow(longArrowSpot, ref clearingLong, false);
 
+                //Despues de lanzar la flecha, miramos al sitio del que pueden salir los enemigos corriendo
+                holding = importantSpots[(int)Spots.Long_Pocket].transform;
+            }
 
-            if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[1].transform;
+            //Miramos antes para no perder tiempo
+            if (dist.magnitude < offsetToPoints + lookingOffset) transform.LookAt(arrowSpots[(int)arrows.Long].transform);
 
         }
         else if (clearingSite)
         {
             //Decidimos desde donde lanzar la flecha
-            Vector3 distToLong = transform.position - importantSpots[1].transform.position;
-            Vector3 distToHooka = transform.position - importantSpots[13].transform.position;
+            Vector3 distToLong = transform.position - importantSpots[(int)Spots.Close_Long].transform.position;
+            Vector3 distToHooka = transform.position - importantSpots[(int)Spots.Hooka_Entry].transform.position;
 
             //La lanzamos desde larga
             if (distToLong.magnitude < distToHooka.magnitude)
             {
-                Vector3 longGarden = importantSpots[16].transform.position;
-                Vector3 siteArrowSpot = arrowSpots[2].transform.position;
+                Vector3 longGarden = importantSpots[(int)Spots.Long_Garden].transform.position;
+                Vector3 siteArrowSpot = arrowSpots[(int)arrows.Site].transform.position;
 
                 agent.SetDestination(longGarden);
 
                 Vector3 dist = transform.position - longGarden;
-                if (dist.magnitude < offsetToPoints) shootArrow(siteArrowSpot, ref clearingSite, false);
+                if (dist.magnitude < offsetToPoints)
+                {
+                    shootArrow(siteArrowSpot, ref clearingSite, false);
+
+                    holding = importantSpots[(int)Spots.Containner_Cubby].transform;
+                }
 
 
-                if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[2].transform;
+                if (dist.magnitude < offsetToPoints + lookingOffset) transform.LookAt(arrowSpots[(int)arrows.Site].transform);
             }//La lanzamos desde hooka
             else
             {
-                Vector3 inHooka = importantSpots[15].transform.position;
-                Vector3 siteArrowSpot = arrowSpots[2].transform.position;
+                Vector3 inHooka = importantSpots[(int)Spots.Hooka_Close].transform.position;
+                Vector3 siteArrowSpot = arrowSpots[(int)arrows.Site].transform.position;
 
                 agent.SetDestination(inHooka);
 
                 Vector3 dist = transform.position - inHooka;
-                if (dist.magnitude < offsetToPoints) shootArrow(siteArrowSpot, ref clearingSite, false);
+                if (dist.magnitude < offsetToPoints)
+                {
+                    shootArrow(siteArrowSpot, ref clearingSite, false);
+
+                    holding = importantSpots[(int)Spots.BackSite].transform;
+                }
 
 
-                if (dist.magnitude < offsetToPoints + lookingOffset) lookingAt = arrowSpots[2].transform;
+                if (dist.magnitude < offsetToPoints + lookingOffset) transform.LookAt(arrowSpots[(int)arrows.Site].transform);
             }
         }
 
-        Debug.Log(lookingAt);
-        transform.LookAt(lookingAt);
+        transform.LookAt(holding);
     }
 
 
@@ -141,7 +176,6 @@ public class Sova : MonoBehaviour
 
         zone = false;
 
-        lookingAt = null;
         //if(/*Enemy Spotted */)
         //{
         //    enemiesFrequentPositions.Add(/*pos*/);
@@ -164,4 +198,6 @@ public class Sova : MonoBehaviour
     {
         //Inicializar tu lista de puntos frecuentes
     }
+
+    void stopHolding() { holding = null; }
 }
