@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Messages : MonoBehaviour
 {
-    public enum MessageType { EnemySpotte, AngleCleared }
+    public enum MessageType { EnemySpotted, AngleCleared }
 
     public MessageType type;
 

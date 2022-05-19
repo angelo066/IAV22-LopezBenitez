@@ -24,7 +24,7 @@ public class Arrow : MonoBehaviour
     public void setInfo(Messages info) {
         msg = info;
 
-        shooter.receiveInfoFromArrow(msg);
+        shooter.receiveInfoFromSenses(msg);
     }
 
     public void setShooter(Sova s) { shooter = s; }

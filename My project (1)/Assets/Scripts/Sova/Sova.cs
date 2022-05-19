@@ -205,7 +205,7 @@ public class Sova : InfoReceiver
 
     void stopHolding() { holding = null; }
 
-    public void receiveInfoFromArrow(Messages info) {
+    public void receiveInfoFromSenses(Messages info) {
         msg = info;
         newInformation = true;
     }

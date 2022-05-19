@@ -50,7 +50,7 @@ public class DetectZone : MonoBehaviour
 
     public Messages setInfo()
     {
-        msg.type = Messages.MessageType.EnemySpotte;
+        msg.type = Messages.MessageType.EnemySpotted;
 
         msg.positions = enemyPositions;
 
