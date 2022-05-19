@@ -4,38 +4,63 @@ using UnityEngine;
 
 public class DetectZone : MonoBehaviour
 {
-    bool enemySpotted = false;
+    bool infoHasChanged = false;
 
-    List<Vector3> enemyPositions;
+    List<Vector3> enemyPositions = new List<Vector3>();
+    List<int> enemySpots = new List<int>();
+
+    int enemiesSpotted = 0;
+
+    //Para enviar la informacion una vez la tenemos
+    Arrow thisArrow = null;
+    Messages msg = new Messages();
+
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        Enemy en = other.gameObject.GetComponent<Enemy>();
+
         //Si hay un enemigo en rango, comprobamos que haya rango de vision hasta el
-        if(other.gameObject.GetComponent<Enemy>() != null)
+        if (en != null)
         {
             RaycastHit hit;
+            //Si detectamos a un enemigo, almacenamos toda su información para transmitirsela a nuestros compañeros
             if(Physics.Raycast(transform.position, transform.position - other.transform.position, out hit))
             {
-                enemySpotted = true;
+                enemyPositions.Add(other.gameObject.transform.position);
+                enemySpots.Add(en.getSpot());
 
+                enemiesSpotted++;
+                infoHasChanged = true;
             }
         }  
     }
 
-    public bool spottedAnEnemy()
+    private void Update()
     {
-        return enemySpotted;
+        //Timer para borrar la zona
+
+        if (infoHasChanged)
+        {
+            setInfo();
+            thisArrow.setInfo(msg);
+            infoHasChanged = false;
+        }
     }
 
-    public Messages getPositions()
+    public Messages setInfo()
     {
-        Messages msg = new Messages();
-
         msg.type = Messages.MessageType.EnemySpotte;
 
         msg.positions = enemyPositions;
 
+        msg.enemiesSpotted = enemiesSpotted;
+
+        msg.enemySpots = enemySpots;
+
+
         return msg;
     }
+
+    public void setArrow(Arrow a) { thisArrow = a; }
 }

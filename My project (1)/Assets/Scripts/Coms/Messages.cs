@@ -8,7 +8,9 @@ public class Messages : MonoBehaviour
 
     public MessageType type;
 
-    public int spot;
+    public List<int> enemySpots;
 
     public List<Vector3> positions;
+
+    public int enemiesSpotted;
 }

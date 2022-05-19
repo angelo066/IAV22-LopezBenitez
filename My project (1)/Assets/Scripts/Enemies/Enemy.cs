@@ -10,4 +10,6 @@ public class Enemy : MonoBehaviour
     {
         spot = s;
     }
+
+    public int getSpot() { return spot; }
 }

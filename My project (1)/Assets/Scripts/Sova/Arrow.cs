@@ -4,10 +4,28 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
+    //Prefab for our revealing zone
     public GameObject reconZone;
+
+    //Mesage to retrun from our reconZone
+    Messages msg;
+
+    Sova shooter;
 
     void Start()
     {
-        Instantiate(reconZone, this.transform.position, Quaternion.identity);
+       GameObject recon = Instantiate(reconZone, this.transform.position, Quaternion.identity);
+
+        DetectZone dz = recon.GetComponent<DetectZone>();
+        dz.setArrow(this);
+
     }
+
+    public void setInfo(Messages info) {
+        msg = info;
+
+        shooter.receiveInfoFromArrow(msg);
+    }
+
+    public void setShooter(Sova s) { shooter = s; }
 }

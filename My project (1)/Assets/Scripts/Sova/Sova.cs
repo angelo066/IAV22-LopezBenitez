@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Sova : MonoBehaviour
+public class Sova : InfoReceiver
 {
     //Enum de los lugares a los que mirar o en los que colocarse
     enum Spots {Market, Close_Long, Close_Fountain, Long_Pocket, Garden, Garden_Pocket, Elbow, Close_Ct, Ct, BackSite, Container_Box, Containner_Cubby,
@@ -39,6 +39,11 @@ public class Sova : MonoBehaviour
     //Booleano para saber si tengo que lanzar flecha a hooka
     bool clearingSite = false;
 
+    //Booleano para saber cuando tenemos que comunicar nueva informacion
+    bool newInformation = false;
+    Messages msg; //Mesaje para enviar
+    Arrow actualArrow; //Flecha que nos proporciona la informacion
+
     //The angle that we are holding at the moment
     Transform holding = null;
 
@@ -71,8 +76,6 @@ public class Sova : MonoBehaviour
         {
             stopHolding();
         }
-
-        //Debug.Log(lookingAt);
 
         if (clearingHooka)
         {
@@ -161,6 +164,13 @@ public class Sova : MonoBehaviour
             }
         }
 
+
+        if (newInformation)
+        {
+            sendInfo(msg);
+            newInformation = false;
+        }
+
         transform.LookAt(holding);
     }
 
@@ -173,6 +183,7 @@ public class Sova : MonoBehaviour
         if(wallOrientation)arr.transform.Rotate(new Vector3(0, 0, 90));
         else arr.transform.Rotate(new Vector3(90, 0, 0));
 
+        arr.GetComponent<Arrow>().setShooter(this);
 
         zone = false;
 
@@ -182,13 +193,6 @@ public class Sova : MonoBehaviour
         //}
 
     }
-
-    void ReceiveInfo(Messages msg)
-    {
-
-    }
-
-
     void addToMemory()
     {
         //Escribir en el txt las nuevas posiciones
@@ -200,4 +204,9 @@ public class Sova : MonoBehaviour
     }
 
     void stopHolding() { holding = null; }
+
+    public void receiveInfoFromArrow(Messages info) {
+        msg = info;
+        newInformation = true;
+    }
 }

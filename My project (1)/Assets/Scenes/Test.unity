@@ -664,6 +664,8 @@ MonoBehaviour:
   - {fileID: 755875418}
   - {fileID: 430701732}
   enemy: {fileID: 5818073084189135117, guid: ac010c3d1cea197409a7d564a64f80df, type: 3}
+  players:
+  - {fileID: 595584735}
 --- !u!4 &756172753
 Transform:
   m_ObjectHideFlags: 0
@@ -769,7 +771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_Name
-      value: FirstPersonController
+      value: Sova
       objectReference: {fileID: 0}
     - target: {fileID: 4459864851310106426, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_HDR
